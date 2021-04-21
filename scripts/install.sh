@@ -130,6 +130,23 @@ chmod +x boot_*.sh /etc/rc.local
 
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
+systemctl stop 3proxy.service
+
+cat >/etc/rc.local <<EOF
+#!/bin/bash
+# THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES
+#
+# It is highly advisable to create own systemd services or udev rules
+# to run scripts during boot instead of using this file.
+#
+# In contrast to previous versions due to parallel execution during boot
+# this script will NOT be run after all other services.
+#
+# Please note that you must run 'chmod +x /etc/rc.d/rc.local' to ensure
+# that this script will be executed during boot.
+
+touch /var/lock/subsys/local
+
 FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
 GIPV=$(ifconfig | grep "$FIRST_IPV6")
 if [ -z "$GIPV" ]; then
@@ -140,7 +157,10 @@ else
   echo "Addresses already added"
 fi
 
-systemctl start 3proxy.service
+service 3proxy start
+EOF
+
+bash /etc/rc.local
 
 gen_proxy_file_for_user
 
