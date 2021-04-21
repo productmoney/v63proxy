@@ -72,10 +72,7 @@ EOF
 }
 
 gen_ifconfig() {
-  IFAZE=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"`
-  PCMD="ifconfig $IFAZE inet6 add"
-  ADRSPACE="/64"
   cat <<EOF
-$(awk -F "/" '{print $IFAZE $5 $ADRSPACE}' ${WORKDATA})
+awk -v pcmd=$(ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//") -F "/" '{print "ifconfig " pcmd " inet6 add " $5 "/64"}' "proxy-installer/data.txt"
 EOF
 }
