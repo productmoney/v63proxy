@@ -141,7 +141,9 @@ else
   echo "Addresses already added"
 fi
 ulimit -n 10048
-systemctl start 3proxy.service
+service 3proxy stop
+sleep 5
+service 3proxy start
 EOF
 
 bash /etc/rc.local
