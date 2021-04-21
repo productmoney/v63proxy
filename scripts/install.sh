@@ -132,19 +132,9 @@ gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
 systemctl stop 3proxy.service
 
-IP_SCRIPT="${WORKDIR}/fix_ips.sh"
-cat <<EOF > $IP_SCRIPT
-FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
-GIPV=$(ifconfig | grep "$FIRST_IPV6")
-if [ -z "$GIPV" ]; then
-  echo "Adding addresses"
-  bash ${WORKDIR}/boot_iptables.sh
-  bash ${WORKDIR}/boot_ifconfig.sh
-else
-  echo "Addresses already added"
-fi
-EOF
-chmod +x $IP_SCRIPT
+curl https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh
+mv fix_ips "$WORKDIR"
+chmod +x "$WORKDIR/fix_ips.sh"
 
 cat >/etc/rc.local <<EOF
 #!/bin/bash
