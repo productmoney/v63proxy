@@ -130,7 +130,6 @@ chmod +x boot_*.sh /etc/rc.local
 
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
-cat >>/etc/rc.local <<EOF
 FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
 GIPV=$(ifconfig | grep "$FIRST_IPV6")
 if [ -z "$GIPV" ]; then
@@ -140,11 +139,8 @@ if [ -z "$GIPV" ]; then
 else
   echo "Addresses already added"
 fi
-ulimit -n 10048
-service 3proxy start
-EOF
 
-bash /etc/rc.local
+systemctl start 3proxy.service
 
 gen_proxy_file_for_user
 
