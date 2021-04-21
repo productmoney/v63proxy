@@ -121,7 +121,7 @@ LAST_PORT=$(($FIRST_PORT + $COUNT))
 
 gen_data >$WORKDIR/data.txt
 
-FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' proxy-installer/data.txt)
+FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
 FOUND_ADDR=$(ifconfig | grep "$FIRST_IPV6")
 if [ "$FOUND_ADDR" -eq 0 ]; then
   echo "Addresses already added"
