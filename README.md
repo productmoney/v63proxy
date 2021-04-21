@@ -6,7 +6,7 @@ Redirect connections from different ports at one ipv4 address to unique random i
 
 1. Create a Centos 8 vps with Ipv6 \64 on, VPS from [Vultr *100$ free*](https://www.vultr.com/?ref=8815005-6G) used as Centos setup. ssh into it
 
-2. `yum update;yum install git make gcc net-tools bsdtar;grep 97816 /etc/security/limits.conf || echo -e "* hard nofile 97816\n* soft nofile 97816" >> /etc/security/limits.conf`
+2. `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/init.sh")`
 
 3. log out, log back in
 

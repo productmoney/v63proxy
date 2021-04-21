@@ -106,11 +106,9 @@ EOF
 
 gen_ifconfig() {
   cat <<EOF
-$(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
+$(awk -F "/" '{print "ifconfig " `ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"` " inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
-echo "installing apps"
-yum -y install make git gcc net-tools bsdtar zip #>/dev/null
 
 install_3proxy
 
@@ -150,4 +148,11 @@ gen_proxy_file_for_user
 
 # upload_proxy
 
-install_jq && upload_2file
+# Make sure jq properly installed
+if [ -x jq ]; then
+  :
+else
+  install_jq
+fi
+
+upload_2file

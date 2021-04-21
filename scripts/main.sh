@@ -1,5 +1,3 @@
-echo "installing apps"
-yum -y install gcc net-tools bsdtar zip
 
 install_3proxy
 
