@@ -39,7 +39,7 @@ log /var/log/3proxy.log
 
 flush
 auth iponly
-allow * * $IP_AUTHORIZATION
+allow *
 
 $(awk -F "/" '{print "proxy -6 -n -a -p" $3 " -i" $2 " -e"$4"\n"}' ${WORKDATA})
 EOF
