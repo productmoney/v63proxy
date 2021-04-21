@@ -72,8 +72,7 @@ EOF
 }
 
 gen_ifconfig() {
-  IFAZEE=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"`
   cat <<EOF
-$(awk -F "/" '{print "ifconfig " $IFAZEE " inet6 add " $5 "/64"}' ${IFAZEE, WORKDATA})
+$(IFAZEE=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"`;awk -F "/" '{print "ifconfig " $IFAZEE " inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
