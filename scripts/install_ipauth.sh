@@ -39,11 +39,9 @@ log /var/log/3proxy.log
 
 flush
 auth iponly
+allow * * $IP_AUTHORIZATION
 
-$(awk -F "/" '{print "auth iponly\n" \
-"allow * " $1 "\n" \
-"proxy -6 -n -a -p" $3 " -i" $2 " -e"$4"\n" \
-"flush\n"}' ${WORKDATA})
+$(awk -F "/" '{print "proxy -6 -n -a -p" $3 " -i" $2 " -e"$4"\n"' ${WORKDATA})
 EOF
 }
 
@@ -53,16 +51,6 @@ $(awk -F "/" '{print $2 ":" $3 }' ${WORKDATA})
 EOF
 }
 
-upload_proxy() {
-    local PASS=$(random)
-    zip --password $PASS proxy.zip proxy.txt
-    URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
-
-    echo "Proxy is ready! Format IP:PORT"
-    echo "Download zip archive from: ${URL}"
-    echo "Password: ${PASS}"
-
-}
 gen_data() {
     seq $FIRST_PORT $LAST_PORT | while read port; do
         echo "$IP_AUTHORIZATION/$IP4/$port/$(gen64 $IP6)"
@@ -84,12 +72,6 @@ upload_2file() {
   echo "Proxy is ready! Format IP:PORT:LOGIN:PASS"
   echo "Download zip archive from: ${URL}"
   echo "Password: ${PASS}"
-}
-
-gen_data() {
-  seq $FIRST_PORT $LAST_PORT | while read port; do
-    echo "usr$(random)/pass$(random)/$IP4/$port/$(gen64 $IP6)"
-  done
 }
 
 gen_iptables() {
@@ -186,18 +168,18 @@ echo "/root/proxy-installer"
 bash /etc/rc.local
 sleep 2
 
-#echo "-----------------"
-#gen_proxy_file_for_user
-#
-#echo "-----------------"
-## Make sure jq properly installed
-#JQFILE=/usr/bin/jq
-#if test -f "$JQFILE"; then
-#  echo "jq is already installed."
-#else
-#  echo "jq is not installed."
-#  install_jq
-#fi
+echo "-----------------"
+gen_proxy_file_for_user
+
+echo "-----------------"
+# Make sure jq properly installed
+JQFILE=/usr/bin/jq
+if test -f "$JQFILE"; then
+  echo "jq is already installed."
+else
+  echo "jq is not installed."
+  install_jq
+fi
 
 echo "-----------------"
 echo "ps aux | grep 3proxy"
@@ -208,9 +190,11 @@ echo "-----------------"
 echo "ulimit -Hn (should return 97816)"
 ulimit -Hn
 
-#echo "-----------------"
-#upload_2file
-#sleep 2
+echo "-----------------"
+upload_2file
+sleep 2
+
+# iptables -I INPUT -p tcp --dport $IP6::/64 -m state --state NEW -j ACCEPT
 
 echo "-----------------"
 echo "to start proxy: systemctl start 3proxy.service"
