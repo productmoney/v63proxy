@@ -130,9 +130,8 @@ gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 
 chmod +x boot_*.sh /etc/rc.local
 
-mkdir -p /conf
-gen_3proxy >/conf/3proxy.cfg
-cp /conf/3proxy.cfg "$WORKDIR"
+gen_3proxy >/etc/3proxy/3proxy.cfg
+cp /etc/3proxy/3proxy.cfg "$WORKDIR"
 
 systemctl stop 3proxy.service
 sleep 5
@@ -159,7 +158,7 @@ touch /var/lock/subsys/local
 
 bash /root/proxy-installer/fix_ips.sh
 
-cp /root/proxy-installer/3proxy.cfg /conf/3proxy.cfg
+cp /root/proxy-installer/3proxy.cfg /etc/3proxy/3proxy.cfg
 
 service 3proxy start
 EOF
