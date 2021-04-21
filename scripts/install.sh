@@ -23,11 +23,16 @@ install_3proxy() {
   cd 3proxy
 
   make -f Makefile.Linux
-  mkdir -p /usr/local/etc/3proxy/{bin,logs,stat}
-  cp src/3proxy /usr/local/etc/3proxy/bin/
-  cp ./scripts/rc.d/proxy.sh /etc/init.d/3proxy
-  chmod +x /etc/init.d/3proxy
-  chkconfig 3proxy on
+#  mkdir -p /usr/local/etc/3proxy/{bin,logs,stat}
+
+#  cp bin/3proxy /usr/local/etc/3proxy/bin/
+#  cp ./scripts/rc.d/proxy.sh /etc/init.d/3proxy
+
+#  chmod +x /etc/init.d/3proxy
+#  chkconfig 3proxy on
+
+  make install
+
   cd $WORKDIR
 }
 
@@ -103,12 +108,12 @@ $(awk -F "/" '{print "ifconfig eth0 inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
 echo "installing apps"
-yum -y install gcc net-tools bsdtar zip >/dev/null
+yum -y install make git gcc net-tools bsdtar zip #>/dev/null
 
 install_3proxy
 
-echo "working folder = /home/proxy-installer"
-WORKDIR="/home/proxy-installer"
+echo "working folder = /root/proxy-installer"
+WORKDIR="/root/proxy-installer"
 WORKDATA="${WORKDIR}/data.txt"
 mkdir -p $WORKDIR && cd $_
 
@@ -128,7 +133,7 @@ gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 chmod +x boot_*.sh /etc/rc.local
 
-gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
+gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
 cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh

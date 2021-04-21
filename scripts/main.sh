@@ -1,10 +1,10 @@
 echo "installing apps"
-yum -y install gcc net-tools bsdtar zip >/dev/null
+yum -y install gcc net-tools bsdtar zip
 
 install_3proxy
 
-echo "working folder = /home/proxy-installer"
-WORKDIR="/home/proxy-installer"
+echo "working folder = /root/proxy-installer"
+WORKDIR="/root/proxy-installer"
 WORKDATA="${WORKDIR}/data.txt"
 mkdir -p $WORKDIR && cd $_
 
@@ -24,12 +24,11 @@ gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 chmod +x boot_*.sh /etc/rc.local
 
-gen_3proxy >/usr/local/etc/3proxy/3proxy.cfg
+gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
 cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh
-ulimit -n 2048
 service 3proxy start
 EOF
 
