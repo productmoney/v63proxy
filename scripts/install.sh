@@ -134,15 +134,13 @@ cat >>/etc/rc.local <<EOF
 FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
 GIPV=$(ifconfig | grep "$FIRST_IPV6")
 if [ -z "$GIPV" ]; then
-  echo "Addresses already added"
-else
   echo "Adding addresses"
   gen_iptables >$WORKDIR/boot_iptables.sh
   gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+else
+  echo "Addresses already added"
 fi
 ulimit -n 10048
-systemctl stop 3proxy.service
-sleep 5
 systemctl start 3proxy.service
 EOF
 
