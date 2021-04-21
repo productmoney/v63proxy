@@ -105,14 +105,16 @@ EOF
 }
 
 gen_ifconfig() {
+  IFAZE=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"`
   cat <<EOF
-$(awk -F "/" '{print "ifconfig " `ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"` " inet6 add " $5 "/64"}' ${WORKDATA})
+$(awk -F "/" '{print "ifconfig " $IFAZE " inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
 
 if [ -x jq ]; then
   echo "3proxy already installed."
 else
+  echo "3proxy not installed."
   install_3proxy
 fi
 

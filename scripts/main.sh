@@ -2,6 +2,7 @@
 if [ -x jq ]; then
   echo "3proxy is already installed."
 else
+  echo "3proxy is not installed."
   install_3proxy
 fi
 
