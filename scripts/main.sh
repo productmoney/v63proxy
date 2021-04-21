@@ -1,5 +1,9 @@
 
-install_3proxy
+if [ -x jq ]; then
+  echo "3proxy is already installed."
+else
+  install_3proxy
+fi
 
 echo "working folder = /root/proxy-installer"
 WORKDIR="/root/proxy-installer"

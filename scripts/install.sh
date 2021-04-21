@@ -110,7 +110,11 @@ $(awk -F "/" '{print "ifconfig " `ip route | grep default | sed -e "s/^.*dev.//"
 EOF
 }
 
-install_3proxy
+if [ -x jq ]; then
+  echo "3proxy already installed."
+else
+  install_3proxy
+fi
 
 echo "working folder = /root/proxy-installer"
 WORKDIR="/root/proxy-installer"
