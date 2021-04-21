@@ -139,7 +139,9 @@ cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh
 bash ${WORKDIR}/boot_ifconfig.sh
 ulimit -n 10048
-service 3proxy start
+systemctl stop 3proxy.service
+sleep 5
+systemctl start 3proxy.service
 EOF
 
 bash /etc/rc.local
@@ -158,3 +160,8 @@ else
 fi
 
 upload_2file
+
+echo "to start proxy: systemctl start 3proxy.service"
+echo "to stop proxy: systemctl stop 3proxy.service"
+echo "config at: /usr/local/3proxy/conf/add3proxyuser.sh"
+echo "Log files are created in /usr/local/3proxy/logs symlinked from /var/log/3proxy."
