@@ -132,8 +132,8 @@ gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
 systemctl stop 3proxy.service
 
-IP_SCRIPT="${WORKDIR}/fix_ips.txt"
-cat >$IP_SCRIPT <<EOF
+IP_SCRIPT="${WORKDIR}/fix_ips.sh"
+cat >$IP_SCRIPT <EOF
 FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
 GIPV=$(ifconfig | grep "$FIRST_IPV6")
 if [ -z "$GIPV" ]; then
@@ -144,6 +144,7 @@ else
   echo "Addresses already added"
 fi
 EOF
+chmod +x $IP_SCRIPT
 
 cat >/etc/rc.local <<EOF
 #!/bin/bash
@@ -160,7 +161,7 @@ cat >/etc/rc.local <<EOF
 
 touch /var/lock/subsys/local
 
-bash /root/proxy-installer/fix_ips.txt
+bash /root/proxy-installer/fix_ips.sh
 
 service 3proxy start
 EOF
