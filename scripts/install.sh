@@ -121,6 +121,11 @@ LAST_PORT=$(($FIRST_PORT + $COUNT))
 
 gen_data >$WORKDIR/data.txt
 
+echo "Generating iptables script"
+gen_iptables >$WORKDIR/boot_iptables.sh
+echo "Generating ifconfig script"
+gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+
 chmod +x boot_*.sh /etc/rc.local
 
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
