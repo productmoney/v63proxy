@@ -14,22 +14,9 @@ gen64() {
 install_3proxy() {
   echo "installing 3proxy"
 
-#  URL="https://github.com/z3APA3A/3proxy/archive/3proxy-0.8.6.tar.gz"
-#  wget -qO- $URL | bsdtar -xvf-
-#  cd 3proxy-3proxy-0.8.6
-
   URL="https://github.com/z3apa3a/3proxy"
   git clone $URL
   cd 3proxy
-
-#  make -f Makefile.Linux
-#  mkdir -p /usr/local/etc/3proxy/{bin,logs,stat}
-
-#  cp bin/3proxy /usr/local/etc/3proxy/bin/
-#  cp ./scripts/rc.d/proxy.sh /etc/init.d/3proxy
-
-#  chmod +x /etc/init.d/3proxy
-#  chkconfig 3proxy on
 
   ln -s Makefile.Linux Makefile
   make
@@ -133,8 +120,17 @@ FIRST_PORT=10000
 LAST_PORT=$(($FIRST_PORT + $COUNT))
 
 gen_data >$WORKDIR/data.txt
-gen_iptables >$WORKDIR/boot_iptables.sh
-gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+
+FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' proxy-installer/data.txt)
+FOUND_ADDR=$(ifconfig | grep "$FIRST_IPV6")
+if [ "$FOUND_ADDR" -eq 0 ]; then
+  echo "Addresses already added"
+else
+  echo "Adding addresses"
+  gen_iptables >$WORKDIR/boot_iptables.sh
+  gen_ifconfig >$WORKDIR/boot_ifconfig.sh
+fi
+
 chmod +x boot_*.sh /etc/rc.local
 
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
