@@ -73,6 +73,6 @@ EOF
 
 gen_ifconfig() {
   cat <<EOF
-awk -v pcmd=$(ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//") -F "/" '{print "ifconfig " pcmd " inet6 add " $5 "/64"}' "proxy-installer/data.txt"
+$(awk -v pcmd=$(ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//") -F "/" '{print "ifconfig " pcmd " inet6 add " $5 "/64"}' "proxy-installer/data.txt" ${WORKDATA})
 EOF
 }
