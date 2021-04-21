@@ -132,6 +132,19 @@ gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 
 systemctl stop 3proxy.service
 
+IP_SCRIPT="${WORKDIR}/fix_ips.txt"
+cat >$IP_SCRIPT <<EOF
+FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
+GIPV=$(ifconfig | grep "$FIRST_IPV6")
+if [ -z "$GIPV" ]; then
+  echo "Adding addresses"
+  bash ${WORKDIR}/boot_iptables.sh
+  bash ${WORKDIR}/boot_ifconfig.sh
+else
+  echo "Addresses already added"
+fi
+EOF
+
 cat >/etc/rc.local <<EOF
 #!/bin/bash
 # THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES
@@ -147,15 +160,7 @@ cat >/etc/rc.local <<EOF
 
 touch /var/lock/subsys/local
 
-FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
-GIPV=$(ifconfig | grep "$FIRST_IPV6")
-if [ -z "$GIPV" ]; then
-  echo "Adding addresses"
-  gen_iptables >$WORKDIR/boot_iptables.sh
-  gen_ifconfig >$WORKDIR/boot_ifconfig.sh
-else
-  echo "Addresses already added"
-fi
+bash /root/proxy-installer/fix_ips.txt
 
 service 3proxy start
 EOF
