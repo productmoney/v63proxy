@@ -28,7 +28,7 @@ gen_iptables >$WORKDIR/boot_iptables.sh
 gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 chmod +x boot_*.sh /etc/rc.local
 
-gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
+gen_3proxy >/conf/3proxy.cfg
 
 cat >>/etc/rc.local <<EOF
 bash ${WORKDIR}/boot_iptables.sh

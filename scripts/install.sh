@@ -102,6 +102,7 @@ else
   echo "3proxy not installed."
   install_3proxy
 fi
+sleep 5
 
 echo "working folder = /root/proxy-installer"
 WORKDIR="/root/proxy-installer"
@@ -112,12 +113,13 @@ IP4=$(curl -4 -s icanhazip.com)
 IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
+sleep 5
 
 echo "How many proxy do you want to create? Example 500"
-read COUNT
+read -r COUNT
 
 FIRST_PORT=10000
-LAST_PORT=$(($FIRST_PORT + $COUNT))
+LAST_PORT=$((FIRST_PORT + COUNT))
 
 gen_data >$WORKDIR/data.txt
 
@@ -128,12 +130,16 @@ gen_ifconfig >$WORKDIR/boot_ifconfig.sh
 
 chmod +x boot_*.sh /etc/rc.local
 
-gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
+mkdir -p /conf
+gen_3proxy >/conf/3proxy.cfg
+cp /conf/3proxy.cfg "$WORKDIR"
 
 systemctl stop 3proxy.service
+sleep 5
+killall 3proxy
+sleep 5
 
-wget https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh
-mv ~/fix_ips.sh "$WORKDIR/fix_ips.sh"
+wget https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
 chmod +x "$WORKDIR/fix_ips.sh"
 
 cat >/etc/rc.local <<EOF
@@ -153,14 +159,16 @@ touch /var/lock/subsys/local
 
 bash /root/proxy-installer/fix_ips.sh
 
+cp /root/proxy-installer/3proxy.cfg /conf/3proxy.cfg
+
 service 3proxy start
 EOF
 
+echo "/root/proxy-installer"
 bash /etc/rc.local
+sleep 5
 
 gen_proxy_file_for_user
-
-# upload_proxy
 
 # Make sure jq properly installed
 JQFILE=/usr/bin/jq
@@ -171,11 +179,21 @@ else
   install_jq
 fi
 
-upload_2file
+echo ""
+echo "ps aux | grep 3proxy"
+ps aux | grep 3proxy | grep -v grep
+sleep 5
 
+echo ""
+echo "ulimit -Hn (should return 97816)"
+ulimit -Hn
+
+echo ""
+upload_2file
+sleep 5
+
+echo ""
 echo "to start proxy: systemctl start 3proxy.service"
 echo "to stop proxy: systemctl stop 3proxy.service"
 echo "config at: /usr/local/3proxy/conf/add3proxyuser.sh"
 echo "Log files are created in /usr/local/3proxy/logs symlinked from /var/log/3proxy."
-
-ps aux | grep 3proxy | grep -v grep

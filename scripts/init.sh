@@ -1,9 +1,9 @@
 echo ""
 echo "Updating system and installing requirements"
 
-yum update
+yum update -y
 
-yum install git make gcc net-tools bsdtar
+yum install git make gcc net-tools bsdtar -y
 
 echo ""
 echo "Adding * hard nofile 97816 and * soft nofile 97816 to /etc/security/limits.conf"
