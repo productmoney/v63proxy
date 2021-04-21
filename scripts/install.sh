@@ -111,7 +111,8 @@ $(awk -F "/" '{print "ifconfig $IFAZE inet6 add " $5 "/64"}' ${WORKDATA})
 EOF
 }
 
-if [ -x jq ]; then
+PRFILE=/usr/bin/3proxy
+if test -f "$PRFILE"; then
   echo "3proxy already installed."
 else
   echo "3proxy not installed."
@@ -155,9 +156,11 @@ gen_proxy_file_for_user
 # upload_proxy
 
 # Make sure jq properly installed
-if [ -x jq ]; then
-  :
+JQFILE=/usr/bin/jq
+if test -f "$JQFILE"; then
+  echo "jq is already installed."
 else
+  echo "jq is not installed."
   install_jq
 fi
 

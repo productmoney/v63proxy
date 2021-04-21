@@ -1,5 +1,6 @@
 
-if [ -x jq ]; then
+PRFILE=/usr/bin/3proxy
+if test -f "$PRFILE"; then
   echo "3proxy is already installed."
 else
   echo "3proxy is not installed."
