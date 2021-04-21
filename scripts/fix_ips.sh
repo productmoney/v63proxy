@@ -5,6 +5,9 @@ if [ -z "$GIPV" ]; then
   echo "Adding addresses"
   bash "$WORKDIR/boot_iptables.sh"
   bash "$WORKDIR/boot_ifconfig.sh"
+
+  systemctl stop firewalld
+  systemctl start firewalld
 else
   echo "Addresses already added"
 fi

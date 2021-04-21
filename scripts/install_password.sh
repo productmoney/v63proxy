@@ -32,14 +32,11 @@ maxconn 1000
 nscache 65536
 timeouts 1 5 30 60 180 1800 15 60
 flush
-auth strong
+log /var/log/3proxy.log
 
-users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' ${WORKDATA})
+auth iponly
 
-$(awk -F "/" '{print "auth strong\n" \
-"allow " $1 "\n" \
-"proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
-"flush\n"}' ${WORKDATA})
+$(awk -F "/" '{print "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n"' "${WORKDATA}")
 EOF
 }
 
@@ -95,6 +92,8 @@ $(awk -v pcmd=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"`
 EOF
 }
 
+touch /var/log/3proxy.log
+
 PRFILE=/usr/bin/3proxy
 if test -f "$PRFILE"; then
   echo "3proxy already installed."
@@ -102,7 +101,7 @@ else
   echo "3proxy not installed."
   install_3proxy
 fi
-sleep 5
+sleep 2
 
 echo "working folder = /root/proxy-installer"
 WORKDIR="/root/proxy-installer"
@@ -112,17 +111,23 @@ mkdir -p $WORKDIR && cd $_
 IP4=$(curl -4 -s icanhazip.com)
 IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
 
+echo "-----------------"
 echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
-sleep 5
+sleep 3
 
+echo "-----------------"
 echo "How many proxy do you want to create? Example 500"
 read -r COUNT
+
+echo "Which IP do you want to authorize the proxies for?"
+read -r IP_AUTHORIZATION
 
 FIRST_PORT=10000
 LAST_PORT=$((FIRST_PORT + COUNT))
 
 gen_data >$WORKDIR/data.txt
 
+echo "-----------------"
 echo "Generating iptables script"
 gen_iptables >$WORKDIR/boot_iptables.sh
 echo "Generating ifconfig script"
@@ -133,10 +138,11 @@ chmod +x boot_*.sh /etc/rc.local
 gen_3proxy >/etc/3proxy/3proxy.cfg
 cp /etc/3proxy/3proxy.cfg "$WORKDIR"
 
+echo "-----------------"
 systemctl stop 3proxy.service
-sleep 5
+sleep 2
 killall 3proxy
-sleep 5
+sleep 2
 
 wget https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
 chmod +x "$WORKDIR/fix_ips.sh"
@@ -163,12 +169,15 @@ cp /root/proxy-installer/3proxy.cfg /etc/3proxy/3proxy.cfg
 service 3proxy start
 EOF
 
+echo "-----------------"
 echo "/root/proxy-installer"
 bash /etc/rc.local
-sleep 5
+sleep 2
 
+echo "-----------------"
 gen_proxy_file_for_user
 
+echo "-----------------"
 # Make sure jq properly installed
 JQFILE=/usr/bin/jq
 if test -f "$JQFILE"; then
@@ -178,21 +187,23 @@ else
   install_jq
 fi
 
-echo ""
+echo "-----------------"
 echo "ps aux | grep 3proxy"
 ps aux | grep 3proxy | grep -v grep
-sleep 5
+sleep 2
 
-echo ""
+echo "-----------------"
 echo "ulimit -Hn (should return 97816)"
 ulimit -Hn
 
-echo ""
+echo "-----------------"
 upload_2file
-sleep 5
+sleep 2
 
-echo ""
+# iptables -I INPUT -p tcp --dport $IP6::/64 -m state --state NEW -j ACCEPT
+
+echo "-----------------"
 echo "to start proxy: systemctl start 3proxy.service"
-echo "to stop proxy: systemctl stop 3proxy.service"
-echo "config at: /usr/local/3proxy/conf/add3proxyuser.sh"
-echo "Log files are created in /usr/local/3proxy/logs symlinked from /var/log/3proxy."
+echo "to stop proxy: killall 3proxy"
+echo "config at: /etc/3proxy/3proxy.cfg"
+echo "Log at: /var/log/3proxy.log"

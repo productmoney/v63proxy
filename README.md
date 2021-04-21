@@ -10,7 +10,7 @@ Redirect connections from different ports at one ipv4 address to unique random i
 
 3. log out, log back in
 
-4. `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install.sh")`
+4. To use password auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")` OR to use IP auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_ipauth.sh")`
 
 5. After installation dowload the file `proxy.zip`
    * File structure: `IP4:PORT:LOGIN:PASS`
