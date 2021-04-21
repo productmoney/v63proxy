@@ -181,3 +181,5 @@ echo "to start proxy: systemctl start 3proxy.service"
 echo "to stop proxy: systemctl stop 3proxy.service"
 echo "config at: /usr/local/3proxy/conf/add3proxyuser.sh"
 echo "Log files are created in /usr/local/3proxy/logs symlinked from /var/log/3proxy."
+
+ps aux | grep 3proxy | grep -v grep
