@@ -121,16 +121,6 @@ LAST_PORT=$(($FIRST_PORT + $COUNT))
 
 gen_data >$WORKDIR/data.txt
 
-FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
-GIPV=$(ifconfig | grep "$FIRST_IPV6")
-if [ -z "$GIPV" ]; then
-  echo "Addresses already added"
-else
-  echo "Adding addresses"
-  gen_iptables >$WORKDIR/boot_iptables.sh
-  gen_ifconfig >$WORKDIR/boot_ifconfig.sh
-fi
-
 chmod +x boot_*.sh /etc/rc.local
 
 gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
