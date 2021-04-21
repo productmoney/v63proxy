@@ -133,7 +133,7 @@ gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 systemctl stop 3proxy.service
 
 IP_SCRIPT="${WORKDIR}/fix_ips.sh"
-cat >$IP_SCRIPT <EOF
+cat <<EOF > $IP_SCRIPT
 FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
 GIPV=$(ifconfig | grep "$FIRST_IPV6")
 if [ -z "$GIPV" ]; then
