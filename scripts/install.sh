@@ -133,7 +133,7 @@ gen_3proxy >/usr/local/3proxy/conf/3proxy.cfg
 systemctl stop 3proxy.service
 
 wget https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh
-mv fix_ips.sh "$WORKDIR/fix_ips.sh"
+mv ~/fix_ips.sh "$WORKDIR/fix_ips.sh"
 chmod +x "$WORKDIR/fix_ips.sh"
 
 cat >/etc/rc.local <<EOF
