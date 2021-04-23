@@ -39,6 +39,8 @@ log /var/log/3proxy.log
 
 flush
 
+auth none
+
 $(awk -F "/" '{print "proxy -6 -n -a -p" $3 " -i" $2 " -e"$4"\n"}' ${WORKDATA})
 EOF
 }
