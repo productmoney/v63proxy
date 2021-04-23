@@ -18,12 +18,12 @@ Redirect connections from different ports at one ipv4 address to unique random i
 ) to change proxy format as you like
 
 ## Administering the script
-* Proxy list: /root/proxy-installer/proxy.txt
-* Active config at: /etc/3proxy/3proxy.cfg
-* Config template /etc/rc.local writes: /root/proxy-installer/3proxy.cfg
+* Proxy list: `/root/proxy-installer/proxy.txt`
+* Active config at: `/etc/3proxy/3proxy.cfg`
+* Config template /etc/rc.local writes: `/root/proxy-installer/3proxy.cfg`
 * To start proxy: `bash /etc/rc.local`
 * To stop proxy: `killall 3proxy`
-* To rotate proxies `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/rotate_password.sh")`
+* To rotate proxies `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/cleanup.sh")` and then run the script you want to install with again
 * Log at: `tail -n 30 /var/log/3proxy.log`
 
 ## Test your proxy

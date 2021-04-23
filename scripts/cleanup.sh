@@ -25,8 +25,3 @@ rm -r /root/proxy-installer
 echo "------------"
 echo "killing 3proxy"
 killall 3proxy
-
-echo "------------"
-cd /root || exit
-echo "Re-running install script"
-bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")
