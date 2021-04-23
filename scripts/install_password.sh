@@ -31,12 +31,18 @@ gen_3proxy() {
 maxconn 1000
 nscache 65536
 timeouts 1 5 30 60 180 1800 15 60
-flush
 log /var/log/3proxy.log
+flush
+auth strong
 
 auth iponly
 
-$(awk -F "/" '{print "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n"' "/root/proxy-installer/data.txt")
+users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' "/root/proxy-installer/data.txt")
+
+$(awk -F "/" '{print "auth strong\n" \
+"allow " $1 "\n" \
+"proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
+"flush\n"}' "/root/proxy-installer/data.txt")
 EOF
 }
 
