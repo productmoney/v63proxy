@@ -4,7 +4,7 @@ Redirect connections from different ports at one ipv4 address to unique random i
 
 ## Installation
 
-1. Create a Centos 8 vps with Ipv6 \64 on, VPS from [Vultr *100$ free*](https://www.vultr.com/?ref=8815005-6G) used as Centos setup. ssh into it as root with the password from vultr
+1. Create a Centos 8 vps with Ipv6 \64 on, VPS from [Vultr *100$ free*](https://www.vultr.com/?ref=8815005-6G) used as Centos setup. ssh into it as root with the password from vultr. Not yet tested on ipv6 only, do the cloud compute 3.50 one though scaline needs testing.
 
 2. Run the init script: `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/init.sh")`
 
@@ -28,8 +28,8 @@ Redirect connections from different ports at one ipv4 address to unique random i
 
 ## Test your proxy
 
-Install [FoxyProxy](https://addons.mozilla.org/en-US/firefox/addon/foxyproxy-standard/) in Firefox
-![Foxy](img/foxyproxy.png)
+Install [Proxy Switch Omega](https://chrome.google.com/webstore/detail/proxy-switchyomega/padekgcemlokbadohgkifijomclgjgif?hl=en) in Chrome
+![Omega](img/proxy_setup.png)
 
-Open [ipv6-test.com](http://ipv6-test.com/) and check your connection
-![check ip](img/check_ip.png)
+Open [ipv6-test.com](https://test-ipv6.com/) and check your connection
+![check ip](img/connectivity-test.png)
