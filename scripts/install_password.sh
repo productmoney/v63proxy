@@ -27,11 +27,14 @@ install_3proxy() {
 
 gen_3proxy() {
   cat <<EOF
-#daemon
+daemon
 maxconn 1000
 nscache 65536
+nserver 1.1.1.1
 timeouts 1 5 30 60 180 1800 15 60
+stacksize  65536
 log /var/log/3proxy.log
+logformat "t:%o %d %H:%M:%S %T err:%E User:%U %N:%p client:%C:%c target:%R:%r ext_ip:%e req_ip:%Q:%q bytes:req:%I/sent:%O %Q"
 flush
 auth strong
 
@@ -41,7 +44,7 @@ users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' "/root/proxy-instal
 
 $(awk -F "/" '{print "auth strong\n" \
 "allow " $1 "\n" \
-"proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
+"proxy -64 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
 "flush\n"}' "/root/proxy-installer/data.txt")
 EOF
 }
@@ -60,7 +63,6 @@ upload_proxy() {
   echo "Proxy is ready! Format IP:PORT:LOGIN:PASS"
   echo "Download zip archive from: ${URL}"
   echo "Password: ${PASS}"
-
 }
 
 install_jq() {
@@ -163,6 +165,8 @@ cat >/etc/rc.local <<EOF
 # Please note that you must run 'chmod +x /etc/rc.d/rc.local' to ensure
 # that this script will be executed during boot.
 
+killall 3proxy
+
 touch /var/lock/subsys/local
 
 bash /root/proxy-installer/fix_ips.sh
@@ -178,6 +182,7 @@ bash /etc/rc.local
 sleep 2
 
 echo "-----------------"
+echo "Generating proxy file for user at $WORKDATA/proxy.txt."
 gen_proxy_file_for_user
 
 echo "-----------------"
@@ -206,7 +211,10 @@ sleep 2
 # iptables -I INPUT -p tcp --dport $IP6::/64 -m state --state NEW -j ACCEPT
 
 echo "-----------------"
-echo "to start proxy: systemctl start 3proxy.service"
-echo "to stop proxy: killall 3proxy"
-echo "config at: /etc/3proxy/3proxy.cfg"
-echo "Log at: /var/log/3proxy.log"
+echo "Proxy list: /root/proxy-installer/proxy.txt"
+echo "Active config at: /etc/3proxy/3proxy.cfg"
+echo "Config template /etc/rc.local writes: /root/proxy-installer/3proxy.cfg"
+echo "To start proxy: bash /etc/rc.local"
+echo "To stop proxy: killall 3proxy"
+echo "Log at: tail -n 30 /var/log/3proxy.log"
+echo ""

@@ -195,7 +195,7 @@ sleep 2
 # iptables -I INPUT -p tcp --dport $IP6::/64 -m state --state NEW -j ACCEPT
 
 echo "-----------------"
-echo "to start proxy: systemctl start 3proxy.service"
+echo "to start proxy: to start proxy: bash /etc/rc.local"
 echo "to stop proxy: killall 3proxy"
 echo "config at: /etc/3proxy/3proxy.cfg"
 echo "Log at: /var/log/3proxy.log"

@@ -10,12 +10,21 @@ Redirect connections from different ports at one ipv4 address to unique random i
 
 3. log out, log back in
 
-4. To use password auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")` OR to use IP auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_ipauth.sh")`
+4. To use password auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")` OR **NOT DONE YET** to use IP auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_ipauth.sh")`
 
 5. After installation dowload the file `proxy.zip`
    * File structure: `IP4:PORT:LOGIN:PASS`
    * You can use this online [util](http://buyproxies.org/panel/format.php
 ) to change proxy format as you like
+
+## Administering the script
+* Proxy list: /root/proxy-installer/proxy.txt
+* Active config at: /etc/3proxy/3proxy.cfg
+* Config template /etc/rc.local writes: /root/proxy-installer/3proxy.cfg
+* To start proxy: `bash /etc/rc.local`
+* To stop proxy: `killall 3proxy`
+* To rotate proxies `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")`
+* Log at: `tail -n 30 /var/log/3proxy.log`
 
 ## Test your proxy
 
