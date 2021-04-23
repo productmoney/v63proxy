@@ -12,12 +12,21 @@ while read -r addrx; do
   ip addr del "$addrx" dev "$DFNWINTERFACE"
 done </root/extra-addresses.txt
 
+ifconfig
+
 rm /root/extra-addresses.txt
 
 systemctl restart NetworkManager
 
+echo "------------"
+echo "Deleting previous proxies files"
 rm -r /root/proxy-installer
 
+echo "------------"
+echo "killing 3proxy"
 killall 3proxy
 
+echo "------------"
+cd /root || exit
+echo "Re-running install script"
 bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")

@@ -66,7 +66,7 @@ upload_proxy() {
 }
 
 install_jq() {
-  wget -O jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+  wget -O -nv jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
   chmod +x ./jq
   cp jq /usr/bin
 }
@@ -149,7 +149,7 @@ sleep 2
 killall 3proxy
 sleep 2
 
-wget https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
+wget -nv https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
 chmod +x "$WORKDIR/fix_ips.sh"
 
 cat >/etc/rc.local <<EOF
