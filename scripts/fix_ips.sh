@@ -1,6 +1,6 @@
 # Try for password format first
 FIRST_IPV6=$(awk -F "/" 'NR==1{print $5}' "/root/proxy-installer/data.txt")
-if [ -z "${FIRST_IPV6// }" ];
+if [ -z "${FIRST_IPV6// }" ]; then
   echo "IP auth is being used"
   FIRST_IPV6=$(awk -F "/" 'NR==1{print $4}' "/root/proxy-installer/data.txt")
 else
