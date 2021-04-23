@@ -29,7 +29,7 @@ Redirect connections from different ports at one ipv4 address to unique random i
 ## Test your proxy
 
 Install [FoxyProxy](https://addons.mozilla.org/en-US/firefox/addon/foxyproxy-standard/) in Firefox
-![Foxy](foxyproxy.png)
+![Foxy](img/foxyproxy.png)
 
 Open [ipv6-test.com](http://ipv6-test.com/) and check your connection
-![check ip](check_ip.png)
+![check ip](img/check_ip.png)
