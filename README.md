@@ -4,13 +4,13 @@ Redirect connections from different ports at one ipv4 address to unique random i
 
 ## Installation
 
-1. Create a Centos 8 vps with Ipv6 \64 on, VPS from [Vultr *100$ free*](https://www.vultr.com/?ref=8815005-6G) used as Centos setup. ssh into it
+1. Create a Centos 8 vps with Ipv6 \64 on, VPS from [Vultr *100$ free*](https://www.vultr.com/?ref=8815005-6G) used as Centos setup. ssh into it as root with the password from vultr
 
-2. `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/init.sh")`
+2. Run the init script: `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/init.sh")`
 
-3. log out, log back in
+3. Log out, then log back in
 
-4. To use password auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")` OR **NOT DONE YET** to use IP auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_ipauth.sh")`
+4. Run the setup script, to use password auth `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")` or to use IP auth **NOT DONE YET** `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_ipauth.sh")`
 
 5. After installation dowload the file `proxy.zip`
    * File structure: `IP4:PORT:LOGIN:PASS`

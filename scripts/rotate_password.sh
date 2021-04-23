@@ -1,3 +1,4 @@
+#!/bin/bash
 
 ip -6 addr | grep inet6 | grep -v dynamic | grep -v link | grep -v host | awk '{print $2}' > /root/extra-addresses.txt
 
