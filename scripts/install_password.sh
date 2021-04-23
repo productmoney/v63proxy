@@ -119,9 +119,6 @@ echo "-----------------"
 echo "How many proxy do you want to create? Example 500"
 read -r COUNT
 
-echo "Which IP do you want to authorize the proxies for?"
-read -r IP_AUTHORIZATION
-
 FIRST_PORT=10000
 LAST_PORT=$((FIRST_PORT + COUNT))
 
