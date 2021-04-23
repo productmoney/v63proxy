@@ -23,7 +23,7 @@ Redirect connections from different ports at one ipv4 address to unique random i
 * Config template /etc/rc.local writes: /root/proxy-installer/3proxy.cfg
 * To start proxy: `bash /etc/rc.local`
 * To stop proxy: `killall 3proxy`
-* To rotate proxies `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/install_password.sh")`
+* To rotate proxies `bash <(curl -s "https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/rotate_password.sh")`
 * Log at: `tail -n 30 /var/log/3proxy.log`
 
 ## Test your proxy
