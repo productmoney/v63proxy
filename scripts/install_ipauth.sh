@@ -56,7 +56,7 @@ gen_data() {
 }
 
 install_jq() {
-  wget -O -nv jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+  wget -O -nvq jq https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
   chmod +x ./jq
   cp jq /usr/bin
 }
@@ -131,12 +131,10 @@ gen_3proxy >/etc/3proxy/3proxy.cfg
 cp /etc/3proxy/3proxy.cfg "$WORKDIR"
 
 echo "-----------------"
-systemctl stop 3proxy.service
-sleep 2
 killall 3proxy
 sleep 2
 
-wget -nv https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
+wget -nvq https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
 chmod +x "$WORKDIR/fix_ips.sh"
 
 cat >/etc/rc.local <<EOF
@@ -195,7 +193,15 @@ sleep 2
 # iptables -I INPUT -p tcp --dport $IP6::/64 -m state --state NEW -j ACCEPT
 
 echo "-----------------"
-echo "to start proxy: to start proxy: bash /etc/rc.local"
-echo "to stop proxy: killall 3proxy"
-echo "config at: /etc/3proxy/3proxy.cfg"
-echo "Log at: /var/log/3proxy.log"
+echo "sample proxies:"
+tail -n 10 /root/proxy-installer/proxy.txt
+sleep 2
+
+echo "-----------------"
+echo "Proxy list: /root/proxy-installer/proxy.txt"
+echo "Active config at: /etc/3proxy/3proxy.cfg"
+echo "Config template /etc/rc.local writes: /root/proxy-installer/3proxy.cfg"
+echo "To start proxy: bash /etc/rc.local"
+echo "To stop proxy: killall 3proxy"
+echo "Log at: tail -n 30 /var/log/3proxy.log"
+echo ""
