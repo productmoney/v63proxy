@@ -36,7 +36,7 @@ log /var/log/3proxy.log
 
 auth iponly
 
-$(awk -F "/" '{print "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n"' "${WORKDATA}")
+$(awk -F "/" '{print "proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n"' "/root/proxy-installer/data.txt")
 EOF
 }
 
