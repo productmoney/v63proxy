@@ -47,7 +47,7 @@ EOF
 
 gen_proxy_file_for_user() {
     cat >proxy.txt <<EOF
-$(awk -F "/" '{print $2 ":" $3 }' ${WORKDATA})
+$(awk -F "/" '{print $2 ":" $3 }' "/root/proxy-installer/data.txt")
 EOF
 }
 
@@ -82,7 +82,7 @@ EOF
 
 gen_ifconfig() {
   cat <<EOF
-$(awk -v pcmd=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"` -F "/" '{print "ifconfig " pcmd " inet6 add " $5 "/64"}' "/root/proxy-installer/data.txt")
+$(awk -v pcmd=`ip route | grep default | sed -e "s/^.*dev.//" -e "s/.proto.*//"` -F "/" '{print "ifconfig " pcmd " inet6 add " $4 "/64"}' "/root/proxy-installer/data.txt")
 EOF
 }
 
