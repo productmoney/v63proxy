@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 random() {
   tr </dev/urandom -dc A-Za-z0-9 | head -c5
   echo
@@ -11,18 +11,19 @@ gen64() {
   }
   echo "$1:$(ip64):$(ip64):$(ip64):$(ip64)"
 }
+
 install_3proxy() {
   echo "installing 3proxy"
 
   URL="https://github.com/z3apa3a/3proxy"
   git clone $URL
-  cd 3proxy
+  cd 3proxy || exit
 
   ln -s Makefile.Linux Makefile
   make
   make install
 
-  cd $WORKDIR
+  cd "$WORKDIR" || exit
 }
 
 gen_3proxy() {
@@ -42,22 +43,20 @@ auth iponly
 
 users $(awk -F "/" 'BEGIN{ORS="";} {print $1 ":CL:" $2 " "}' "/root/proxy-installer/data.txt")
 
-$(awk -F "/" '{print "auth strong\n" \
-"allow " $1 "\n" \
-"proxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\n" \
-"flush\n"}' "/root/proxy-installer/data.txt")
+$(awk -F "/" '{print "auth strong\nallow " $1 "\nproxy -6 -n -a -p" $4 " -i" $3 " -e"$5"\nflush\n"}' "/root/proxy-installer/data.txt")
 EOF
 }
 
 gen_proxy_file_for_user() {
   cat >proxy.txt <<EOF
-$(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' ${WORKDATA})
+$(awk -F "/" '{print $3 ":" $4 ":" $1 ":" $2 }' "${WORKDATA}")
 EOF
 }
 
 upload_proxy() {
-  local PASS=$(random)
-  zip --password $PASS proxy.zip proxy.txt
+  local PASS
+  PASS=$(random)
+  zip --password "$PASS" proxy.zip proxy.txt
   URL=$(curl -s --upload-file proxy.zip https://transfer.sh/proxy.zip)
 
   echo "Proxy is ready! Format IP:PORT:LOGIN:PASS"
@@ -72,8 +71,10 @@ install_jq() {
 }
 
 upload_2file() {
-  local PASS=$(random)
-  zip --password $PASS proxy.zip proxy.txt
+  local PASS
+  PASS=$(random)
+  zip --password "$PASS" proxy.zip proxy.txt
+  local JSON
   JSON=$(curl -F "file=@proxy.zip" https://file.io)
   URL=$(echo "$JSON" | jq --raw-output '.link')
 
@@ -83,8 +84,11 @@ upload_2file() {
 }
 
 gen_data() {
-  seq $FIRST_PORT $LAST_PORT | while read port; do
-    echo "usr$(random)/pass$(random)/$IP4/$port/$(gen64 $IP6)"
+  local port
+  local addrsix
+  seq "$FIRST_PORT" "$LAST_PORT" | while read -r port; do
+    addrsix=$(gen64 "$IP6")
+    echo "usr$(random)/pass$(random)/$IP4/$port/$addrsix"
   done
 }
 
@@ -114,7 +118,7 @@ sleep 2
 echo "working folder = /root/proxy-installer"
 WORKDIR="/root/proxy-installer"
 WORKDATA="${WORKDIR}/data.txt"
-mkdir -p $WORKDIR && cd $_
+mkdir -p $WORKDIR && cd "$_" || exit
 
 IP4=$(curl -4 -s icanhazip.com)
 IP6=$(curl -6 -s icanhazip.com | cut -f1-4 -d':')
