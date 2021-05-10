@@ -153,7 +153,7 @@ sleep 2
 killall 3proxy
 sleep 2
 
-wget -nvq https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
+wget https://raw.githubusercontent.com/productmoney/v63proxy/main/scripts/fix_ips.sh -P "$WORKDIR"
 chmod +x "$WORKDIR/fix_ips.sh"
 
 cat >/etc/rc.local <<EOF
