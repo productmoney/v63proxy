@@ -14,7 +14,7 @@ done </root/extra-addresses.txt
 
 ifconfig
 
-rm /root/extra-addresses.txt
+rm -f /root/extra-addresses.txt
 
 systemctl restart NetworkManager
 
