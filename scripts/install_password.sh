@@ -83,6 +83,25 @@ upload_2file() {
   echo "Password: ${PASS}"
 }
 
+upload_2api() {
+  local token_content
+  local access_token
+  sed -i '/^$/d' "/root/proxy-installer/data.txt"
+  token_content=$(curl -X POST -H "Content-Type: application/json" -d "{\"username\": \"$DJANGO_USERNAME\", \"password\": \"$DJANGO_PASSWORD\"}" https://proxy6way.us/api/token/)
+#  local refresh
+#  refresh=$( jq -r '.refresh' <<< "${token_content}" )
+  access_token=$( jq -r '.access' <<< "${token_content}" )
+  if [ -z "${access_token}" ]; then
+    echo "\$access_token token is empty!"
+  else
+    local proxy_json
+    proxy_json=$(jq -Rs \
+      'split("\n")|map(split("/")|{"username":.[0], "password":.[1], "ipv4_address":.[2], "port":.[3], "ipv6_exit_address":.[4]})' proxy-installer/data.txt | jq 'del(.[][] | nulls)' arr.txt | jq 'del(.[] | select(. == {}))')
+    echo "curl -X POST -H 'Authorization: Bearer \$access_token\" -H \"Content-Type: application/json\" -d \"\$proxy_json\"  \"https://proxy6way.us/api/proxies/\""
+    curl -X POST -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" -d "$proxy_json"  "https://proxy6way.us/api/proxies/"
+  fi
+}
+
 gen_data() {
   local port
   local addrsix
@@ -128,8 +147,17 @@ echo "Internal ip = ${IP4}. Exteranl sub for ip6 = ${IP6}"
 sleep 3
 
 echo "-----------------"
+echo "What is this instance called?"
+read -r INSTANCE_NAME
+
 echo "How many proxy do you want to create? Example 500"
 read -r COUNT
+
+echo "What is the username on the proxy warming server?"
+read -r DJANGO_USERNAME
+
+echo "What is the password on the proxy warming server?"
+read -r DJANGO_PASSWORD
 
 FIRST_PORT=10000
 LAST_PORT=$((FIRST_PORT + COUNT))
@@ -181,7 +209,7 @@ service 3proxy start
 EOF
 
 echo "-----------------"
-echo "/root/proxy-installer"
+echo "bash /etc/rc.local"
 bash /etc/rc.local
 sleep 2
 
@@ -200,6 +228,14 @@ else
 fi
 
 echo "-----------------"
+upload_2file
+sleep 2
+
+echo "-----------------"
+upload_2api
+sleep 2
+
+echo "-----------------"
 echo "ps aux | grep 3proxy"
 ps aux | grep 3proxy | grep -v grep
 sleep 2
@@ -207,10 +243,6 @@ sleep 2
 echo "-----------------"
 echo "ulimit -Hn (should return 97816)"
 ulimit -Hn
-
-echo "-----------------"
-upload_2file
-sleep 2
 
 # iptables -I INPUT -p tcp --dport $IP6::/64 -m state --state NEW -j ACCEPT
 
@@ -222,3 +254,8 @@ echo "To start proxy: bash /etc/rc.local"
 echo "To stop proxy: killall 3proxy"
 echo "Log at: tail -n 30 /var/log/3proxy.log"
 echo ""
+
+echo "-----------------"
+echo "Example proxies"
+head -n 10 proxy-installer/proxy.txt
+echo "-----------------"
