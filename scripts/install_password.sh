@@ -95,7 +95,7 @@ upload_2api() {
     echo "\$access_token token is empty!"
   else
     local proxy_json
-    proxy_json=$(q -Rs 'split("\n")|map(split("/")|{"username":.[0], "password":.[1], "ipv4_address":.[2], "port":.[3], "ipv6_exit_address":.[4]})' /root/proxy-installer/data.txt | jq 'del(.[][] | nulls)' | jq 'del(.[] | select(. == {}))')
+    proxy_json=$(jq -Rs 'split("\n")|map(split("/")|{"username":.[0], "password":.[1], "ipv4_address":.[2], "port":.[3], "ipv6_exit_address":.[4]})' /root/proxy-installer/data.txt | jq 'del(.[][] | nulls)' | jq 'del(.[] | select(. == {}))')
     echo "access_token: $access_token"
     echo "proxy_json: $proxy_json"
     echo "curl -X POST -H 'Authorization: Bearer \$access_token\" -H \"Content-Type: application/json\" -d \"\$proxy_json\"  \"https://proxy6way.us/api/proxies/\""
@@ -249,7 +249,7 @@ ulimit -Hn
 
 echo "-----------------"
 echo "Example proxies"
-head -n 10 $WORKDATA/proxy.txt
+head -n 10 /root/proxy-installer/proxy.txt
 
 echo "-----------------"
 echo "Proxy list: /root/proxy-installer/proxy.txt"
