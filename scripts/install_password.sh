@@ -97,7 +97,7 @@ upload_2api() {
     local proxy_json
     proxy_json=$(jq -Rs 'split("\n")|map(split("/")|{"username":.[0], "password":.[1], "ipv4_address":.[2], "port":.[3], "ipv6_exit_address":.[4]})' /root/proxy-installer/data.txt | jq 'del(.[][] | nulls)' | jq 'del(.[] | select(. == {}))')
     echo "access_token: $access_token"
-    echo "proxy_json: $proxy_json"
+#    echo "proxy_json: $proxy_json"
     echo "curl -X POST -H 'Authorization: Bearer \$access_token\" -H \"Content-Type: application/json\" -d \"\$proxy_json\"  \"https://proxy6way.us/api/proxies/\""
     curl -X POST -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" -d "$proxy_json"  "https://proxy6way.us/api/proxies/"
   fi
