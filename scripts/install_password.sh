@@ -97,6 +97,8 @@ upload_2api() {
     local proxy_json
     proxy_json=$(jq -Rs \
       'split("\n")|map(split("/")|{"username":.[0], "password":.[1], "ipv4_address":.[2], "port":.[3], "ipv6_exit_address":.[4]})' proxy-installer/data.txt | jq 'del(.[][] | nulls)' arr.txt | jq 'del(.[] | select(. == {}))')
+    echo "access_token: $access_token"
+    echo "proxy_json: $proxy_json"
     echo "curl -X POST -H 'Authorization: Bearer \$access_token\" -H \"Content-Type: application/json\" -d \"\$proxy_json\"  \"https://proxy6way.us/api/proxies/\""
     curl -X POST -H "Authorization: Bearer $access_token" -H "Content-Type: application/json" -d "$proxy_json"  "https://proxy6way.us/api/proxies/"
   fi
@@ -247,15 +249,14 @@ ulimit -Hn
 # iptables -I INPUT -p tcp --dport $IP6::/64 -m state --state NEW -j ACCEPT
 
 echo "-----------------"
+echo "Example proxies"
+head -n 10 $WORKDATA/proxy.txt
+
+echo "-----------------"
 echo "Proxy list: /root/proxy-installer/proxy.txt"
 echo "Active config at: /etc/3proxy/3proxy.cfg"
 echo "Config template /etc/rc.local writes: /root/proxy-installer/3proxy.cfg"
 echo "To start proxy: bash /etc/rc.local"
 echo "To stop proxy: killall 3proxy"
 echo "Log at: tail -n 30 /var/log/3proxy.log"
-echo ""
-
-echo "-----------------"
-echo "Example proxies"
-head -n 10 proxy-installer/proxy.txt
 echo "-----------------"
